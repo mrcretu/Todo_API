@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using TodoApi.Models;
+using System;
 
 namespace TodoApi.Controllers
 {
@@ -13,7 +13,7 @@ namespace TodoApi.Controllers
 
         public PersonsController()
         {
-            _context = PersonList.Products;
+            _context = PersonList.Persons;
         }
 
         [HttpGet(Name ="GetAll")]
@@ -23,7 +23,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetPerson")]
-        public ActionResult<Person> GetById(long id)
+        public ActionResult<Person> GetById(Guid id)
         {
             var item = _context.GetById(id); //call GetById() method from PersonList
 
@@ -50,7 +50,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<List<Person>> Delete(long id)
+        public ActionResult<List<Person>> Delete(Guid id)
         {
             if (_context.RemovePerson(id)) //call RemovePerson() method from the PersonList
                 return _context.GetAll(); // return the persons which remained in the list

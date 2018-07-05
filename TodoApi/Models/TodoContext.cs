@@ -18,7 +18,7 @@ namespace TodoApi.Models
 
         }
 
-    public static PersonList Products
+    public static PersonList Persons
         {
             get
             {
@@ -36,9 +36,9 @@ namespace TodoApi.Models
 
         private void Seed()
         {
-            persons.Add(new Person(1, "Cretu", "Marius", 21));
-            persons.Add(new Person(2, "Borceanu","Florin",20));
-            persons.Add(new Person(3, "Marza","Bogdan", 20));
+            persons.Add(new Person("Cretu", "Marius", 21));
+            persons.Add(new Person("Borceanu","Florin",20));
+            persons.Add(new Person("Marza","Bogdan", 20));
         }
 
 
@@ -47,12 +47,12 @@ namespace TodoApi.Models
             return persons;
         }  
 
-        public Person GetById(long id)
+        public Person GetById(Guid id)
         { 
             foreach (var person in persons)
             {
                 if (person.Id == id) return person;
-                }
+            }
         return null;
         }
 
@@ -71,20 +71,10 @@ namespace TodoApi.Models
             return true;
         }
 
-        public bool RemovePerson(long person_id)
+        public bool RemovePerson(Guid person_id)
         {
-            Console.WriteLine(person_id);
-            var count = 0;
-            foreach(var it in persons)
-            {
-                if(it.Id == person_id)
-                {
-                    persons.RemoveAt(count);
-                    return true;
-                }
-                count++;
-            }
-            return false;
+            persons.Remove(GetById(person_id));
+            return true;
         }
     }
 
