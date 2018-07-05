@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using TodoApi.Models;
 
@@ -15,16 +16,16 @@ namespace TodoApi.Controllers
             _context = PersonList.Products;
         }
 
-        [HttpGet]
+        [HttpGet(Name ="GetAll")]
         public ActionResult<List<Person>> GetAll()
         {
-            return _context.GetAll();
+            return _context.GetAll(); //call GetAll() method from PersonList
         }
 
         [HttpGet("{id}", Name = "GetPerson")]
         public ActionResult<Person> GetById(long id)
         {
-            var item = _context.GetById(id);
+            var item = _context.GetById(id); //call GetById() method from PersonList
 
             if (item == null)
             {
@@ -36,41 +37,24 @@ namespace TodoApi.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] Person item)
         {
-            _context.AddPerson(item);
-            //_context.SaveChanges();
-
-            return CreatedAtRoute("GetTodo", new { id = item.Id }, item);
+            _context.AddPerson(item); //call AddPerson() method from PersonList
+            return CreatedAtRoute("GetPerson", new { id = item.Id }, item); // return a route to the new person added
         }
 
-        //[HttpPut("{id}")]
-        //public IActionResult Update(long id, TodoItem item)
-        //{
-        //    var todo = _context.TodoItems.Find(id);
-        //    if (todo == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPut]
+        public IActionResult Update(Person item)
+        {
+            if (_context.UpdatePerson(item)) //call UpdatePerson() method from PersonList
+                return CreatedAtRoute("GetPerson", new { id = item.Id }, item); // return a route to the new person updated info 
+            return NoContent();
+        }
 
-        //    todo.IsComplete = item.IsComplete;
-        //    todo.Name = item.Name;
-
-        //    _context.TodoItems.Update(todo);
-        //    _context.SaveChanges();
-        //    return NoContent();
-        //}
-
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(long id)
-        //{
-        //    var todo = _context.TodoItems.Find(id);
-        //    if (todo == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.TodoItems.Remove(todo);
-        //    _context.SaveChanges();
-        //    return NoContent();
-        //}
+        [HttpDelete("{id}")]
+        public ActionResult<List<Person>> Delete(long id)
+        {
+            if (_context.RemovePerson(id)) //call RemovePerson() method from the PersonList
+                return _context.GetAll(); // return the persons which remained in the list
+            return NotFound();
+        }
     }
 }
